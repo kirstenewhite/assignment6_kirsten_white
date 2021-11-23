@@ -16,13 +16,13 @@ library(broom)
 library(janitor)
 ```
 
-```{r}
+```{r, include = FALSE}
 # Read in the data 
 
 conservation_survey <- read_csv(here("data", "conservation_survey.csv"))
 
 ```
-```{r}
+```{r, include = FALSE}
 # Create a subset containing only ENV_ID and POL_OR columns
 conservation_subset <- conservation_survey %>%
   select(ENV_ID, POL_OR) %>%
@@ -36,7 +36,7 @@ conservation_subset <- conservation_survey %>%
          ENV_ID == "3" ~ "Unsure"))
 ```
 
-```{r}
+```{r, include = FALSE}
 # Create a finalized table showing the counts and proportions of liberal and conservative respondents who responded yes, no, and unsure
 
 # Find the counts 
@@ -72,12 +72,19 @@ environ_tidy <- tidy(environ_x2)
 
 ```
 
-
-# Mini Intro 
-Describing the survey data, the question you’re answering, and the method you’ll use
+# **Introduction**
+In this report, we will explore the question: is there an association between political affiliation (either conservative or liberal) and whether a person considers themselves an environmentalist or not? To achieve this, a contingency table was created with the counts and proportions of responses to the question above and then chi-square test for independence was performed to assess the association between political party and environmentalism. The data used is from a survey conducted by Chelsea Batavia and Andrews Forest to explore the "influences on charitable giving for conservation." The survey included 1,331 respondents and was conducted in August 2017. 
 
 # Finalized Table of Counts & Proportions (w/ table caption)
+```{r}
+# Print out a finalized version of this contingency table 
+environmental_table
+```
+
 
 # 2 - 3 sentence summary of the hypothesis test results and major takeaways
 
-# Add the data citation 
+Following the analysis, a significant association was found between the political party a person is affiliated with and whether or not they consider themselves an environmentalist: ($\chi$^2^(`r environ_tidy$parameter`) = `r round(environ_tidy$statistic, 2)`, *p* `r ifelse(environ_tidy$p.value < 0.001, paste("<0.001"), paste("=", environ_tidy$p.value))`)
+
+**Data Citation**: Batavia, C. 2019. Influences on charitable giving for conservation: Online survey data of 1,331 respondents across the US, August 2017 ver 3. Environmental Data Initiative. https://doi.org/10.6073/pasta/926e6270e324a1322a900da14d38b96c (Accessed 2021-11-23).
+
