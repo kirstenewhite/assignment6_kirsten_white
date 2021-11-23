@@ -1,0 +1,69 @@
+---
+title: "Lizards - Task 3"
+author: "Kirsten White"
+date: "11/23/2021"
+output: html_document
+---
+
+# Goal - compare total lengths for female lizards of two species CNUN and CNTE
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(here)
+library(broom)
+library(janitor)
+library(kableExtra)
+```
+
+```{r}
+# Read in the Data
+lizards <- read_csv(here("data", "lizards.csv"))
+```
+
+```{r}
+# Create a subset of data containing only variables spp, sex, and total_length
+
+lizard_subset <- lizards %>%
+  select(spp, sex, total_length) %>%
+  filter(sex == "F") %>%
+  filter(spp %in% c("CNUN", "CNTE")) %>%
+  mutate(spp_full = case_when(spp == "CNUN" ~ "Desert Grassland", 
+         spp == "CNTE" ~ "Colorado Checkered"))
+```
+
+```{r}
+# Visualize female lizard lengths for the 2 species
+
+ggplot(data = lizard_subset, aes(x = spp_full, y = total_length, color = spp)) +
+  geom_jitter(width = 0.1) +
+  scale_color_manual(values = c("aquamarine4", "goldenrod2"))+
+  labs(x = "Species", 
+       y = "Total Length (mm)", 
+       title = "Female Lizard Length Comparison (CNTE & CNUN Species)", 
+       color = "Species", 
+       caption = "Figure 1: Length (mm) is compared between female Desert Grassland and Colorado Checkered lizard") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
+  theme(plot.caption = element_text(size = 9))+
+  theme(legend.position = "none")
+```
+
+```{r}
+# Create a finalized summary table with the mean, sd, total length, and sample size for each group
+
+female_summary <- lizard_subset %>%
+  group_by(spp_full) %>%
+  drop_na(total_length) %>%
+  summarize(sample_size = n(), 
+            mean_length = mean(total_length), 
+            sd_length = sd(total_length)) %>%
+kbl(col.names = c("Species", "Sample Size", "Mean Length", "Standard Deviation"), digits = 1) %>%
+  kable_classic()
+
+  female_summary
+```
+```{r}
+# Is there a significant difference in total length d
+```
+
