@@ -1,26 +1,33 @@
 ---
-title: "Lizards - Task 3"
+title: "Exploration of Female Desert Grassland and Colorado Checkered Lizards"
 author: "Kirsten White"
-date: "11/23/2021"
 output: html_document
 ---
 
-# Goal - compare total lengths for female lizards of two species CNUN and CNTE
+## **Introduction**
+This report explores lengths in female lizards of two species: Desert Grassland (Cnemidophorus uniparens) and Colorado Checkered (Cnemidophorus tessalatus) lizards. David Lightfoot's Lizard Pitfall Trap Data (LTER) from 1991 is utilized in this report in which the data was collected using live traps and the following variables were measured: species, sex, recapture status, snout-vent length, total length, weight, and whether tail is broken or whole. In this report, we will focus on the relationship between tail lengths among females of the Desert Grassland and Colorado Checkered species. 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+**Data Citation**: Data source: Lightfoot, D. 2017. Lizard pitfall trap data (LTER-II, LTER-III) ver 36. Environmental Data Initiative.
+https://doi.org/10.6073/pasta/ff37b4cace16a9943575f3fd7067064e
+
+
+```{r setup, message = FALSE, echo = FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
 library(tidyverse)
 library(here)
 library(broom)
 library(janitor)
 library(kableExtra)
+library(effsize)
 ```
 
 ```{r}
 # Read in the Data
 lizards <- read_csv(here("data", "lizards.csv"))
 ```
+
+## **Results**
 
 ```{r}
 # Create a subset of data containing only variables spp, sex, and total_length
@@ -37,17 +44,21 @@ lizard_subset <- lizards %>%
 # Visualize female lizard lengths for the 2 species
 
 ggplot(data = lizard_subset, aes(x = spp_full, y = total_length, color = spp)) +
-  geom_jitter(width = 0.1) +
+  geom_jitter(width = 0.1, size = 1.25) +
   scale_color_manual(values = c("aquamarine4", "goldenrod2"))+
   labs(x = "Species", 
        y = "Total Length (mm)", 
-       title = "Female Lizard Length Comparison (CNTE & CNUN Species)", 
+       title = "Female Lizard Length Comparison (WHITE)", 
        color = "Species", 
        caption = "Figure 1: Length (mm) is compared between female Desert Grassland and Colorado Checkered lizard") +
   theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
   theme(plot.caption = element_text(size = 9))+
-  theme(legend.position = "none")
+  theme(legend.position = "none")+
+  theme(axis.title = element_text(face = "bold"))
 ```
+
+---
+**Table 1**: Although the sample size was greater in the Desert Grassland (CNUN) lizards, female Colorado Checkered (CNTE) lizards have a greater mean length (244.9 mm) compared to the Desert Grassland lizards (147.6 mm). Additionally, standard deviation was higher (47.3 mm) in Colorado Checkered lizards than the standard deviation within the femal Desert Grassland lizards (34.6 mm)
 
 ```{r}
 # Create a finalized summary table with the mean, sd, total length, and sample size for each group
@@ -63,7 +74,37 @@ kbl(col.names = c("Species", "Sample Size", "Mean Length", "Standard Deviation")
 
   female_summary
 ```
-```{r}
-# Is there a significant difference in total length d
-```
+---
 
+## **Summary**
+
+Exploratory data analysis reveals the following: 
+```{r, include = FALSE}
+# Statistical analysis
+
+# Create vectors of female lengths for each species
+CNTE_length <- lizard_subset %>%
+  filter(spp == "CNTE") %>%
+  drop_na(total_length)%>%
+  pull(total_length)
+
+CNUN_length <- lizard_subset %>%
+  filter(spp == "CNUN") %>%
+  drop_na(total_length) %>%
+  pull(total_length)
+
+# Find the means of each 
+CNTE_mean_length <- mean(CNTE_length)
+CNUN_mean_length <- mean(CNUN_length)
+
+# Plot histogram and qqplot to check assumptions
+hist(CNTE_length)
+hist(CNUN_length)
+qqnorm(CNTE_length)
+qqnorm(CNUN_length)
+
+# Run a cohen test
+length_cohen <- cohen.d(CNTE_length, CNUN_length)
+length_cohen # indicates a large effect size 
+```
+Female Colorado Checkered lizards are longer in length than female Desert Grassland lizards. The actual difference in mean length is `r round(CNTE_mean_length - CNUN_mean_length, 1)` mm and the percent difference is `r round((CNTE_mean_length - CNUN_mean_length)/(CNTE_mean_length + CNUN_mean_length)/2*100, 1)`%. In addition, a large effect size was found, Cohen's d = `r round(length_cohen$estimate, 1)`. 
