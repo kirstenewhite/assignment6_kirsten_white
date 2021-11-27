@@ -1,7 +1,9 @@
 ---
-title: "Exploration of Female Desert Grassland and Colorado Checkered Lizards"
+title: "Female Desert Grassland and Colorado Checkered Lizards Length Exploration "
 author: "Kirsten White"
-output: html_document
+output: 
+  html_document: 
+    theme: yeti
 ---
 
 ## **Introduction**
@@ -26,6 +28,8 @@ library(effsize)
 # Read in the Data
 lizards <- read_csv(here("data", "lizards.csv"))
 ```
+---
+
 
 ## **Results**
 
@@ -107,4 +111,6 @@ qqnorm(CNUN_length)
 length_cohen <- cohen.d(CNTE_length, CNUN_length)
 length_cohen # indicates a large effect size 
 ```
-Female Colorado Checkered lizards are longer in length than female Desert Grassland lizards. The actual difference in mean length is `r round(CNTE_mean_length - CNUN_mean_length, 1)` mm and the percent difference is `r round((CNTE_mean_length - CNUN_mean_length)/(CNTE_mean_length + CNUN_mean_length)/2*100, 1)`%. In addition, a large effect size was found, Cohen's d = `r round(length_cohen$estimate, 1)`. 
+- Female Colorado Checkered lizards are longer in length than female Desert Grassland lizards. 
+- The actual difference in mean length is `r round(CNTE_mean_length - CNUN_mean_length, 1)` mm and the percent difference is `r round((CNTE_mean_length - CNUN_mean_length)/(CNTE_mean_length + CNUN_mean_length)/2*100, 1)`%. 
+- In addition, a large effect size was found, Cohen's d = `r round(length_cohen$estimate, 1)`. 
