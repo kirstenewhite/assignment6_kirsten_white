@@ -1,8 +1,10 @@
 ---
-title: "Chi Squared"
+title: "Political Party Identification & Environmentalism"
 author: "Kirsten White"
-date: "11/22/2021"
-output: html_document
+output: 
+  html_document: 
+    df_print: kable
+    theme: yeti
 ---
 
 ```{r setup, message = FALSE, echo = FALSE}
@@ -22,6 +24,7 @@ library(janitor)
 conservation_survey <- read_csv(here("data", "conservation_survey.csv"))
 
 ```
+
 ```{r, include = FALSE}
 # Create a subset containing only ENV_ID and POL_OR columns
 conservation_subset <- conservation_survey %>%
@@ -63,6 +66,9 @@ environmental_proportions <- environmental_counts %>%
 environmental_table <- environmental_counts %>%
   column_to_rownames(var = "POL_PARTY")
 
+#prop_table <- environmental_proportions %>%
+ # column_to_rownames(var = "POL_PARTY")
+
 # Chi-squared - asking: is identifying as an environmentalist truly independent of the political party one identifies with 
 environ_x2 <- chisq.test(environmental_table)
 environ_x2
@@ -72,19 +78,31 @@ environ_tidy <- tidy(environ_x2)
 
 ```
 
-# **Introduction**
-In this report, we will explore the question: is there an association between political affiliation (either conservative or liberal) and whether a person considers themselves an environmentalist or not? To achieve this, a contingency table was created with the counts and proportions of responses to the question above and then chi-square test for independence was performed to assess the association between political party and environmentalism. The data used is from a survey conducted by Chelsea Batavia and Andrews Forest to explore the "influences on charitable giving for conservation." The survey included 1,331 respondents and was conducted in August 2017. 
+---
 
-# Finalized Table of Counts & Proportions (w/ table caption)
+## Introduction
+
+In this report, we will explore the following question: is the
+an association between political affiliation (conservative or liberal) and whether or not a person considers themselves an environmentalist? To explore this question, responses from a survey conducted by Chelsea Batavia and Andrews Forest to explore the "influences on charitable giving for conservation" was used as the data. The survey, conducted in 2017, included responses from 1,331 participants. 
+
+To explore this relationship, a contingency table was created with the counts and proportions of participant responses to the question above. Then, a chi-square test for independence was performed to assess the association between political party and environmentalism. 
+
+---
+
+## Findings
+
 ```{r}
 # Print out a finalized version of this contingency table 
-environmental_table
+
+environmental_proportions
 ```
+**Table 1**: The majority of conservative identifying participants responded "No" they do not consider themselves environmentalists (50.24%). Conversely, the majority of liberal identifying participants responded "Yes" they do consider themselves environmentalists (53.73%). 
 
 
-# 2 - 3 sentence summary of the hypothesis test results and major takeaways
+---
 
-Following the analysis, a significant association was found between the political party a person is affiliated with and whether or not they consider themselves an environmentalist: ($\chi$^2^(`r environ_tidy$parameter`) = `r round(environ_tidy$statistic, 2)`, *p* `r ifelse(environ_tidy$p.value < 0.001, paste("<0.001"), paste("=", environ_tidy$p.value))`)
+## Conclusion
 
-**Data Citation**: Batavia, C. 2019. Influences on charitable giving for conservation: Online survey data of 1,331 respondents across the US, August 2017 ver 3. Environmental Data Initiative. https://doi.org/10.6073/pasta/926e6270e324a1322a900da14d38b96c (Accessed 2021-11-23).
+Following the analysis, a significant association was found between the political party a person affiliates with and whether or not they consider themselves an environmentalist: ($\chi$^2^(`r environ_tidy$parameter`) = `r round(environ_tidy$statistic, 2)`, *p* `r ifelse(environ_tidy$p.value < 0.001, paste("<0.001"), paste("=", environ_tidy$p.value))`). Conservative-identifying people more often did not identify as environmentalists while liberal-identifying people more often did identify as environmentalists. 
 
+**Data Citation**: Batavia, C. 2019. Influences on charitable giving for conservation: Online survey data of 1,331 respondents across the US, August 2017 ver 3. Environmental Data Initiative. <https://doi.org/10.6073/pasta/926e6270e324a1322a900da14d38b96c> (Accessed 2021-11-23).
