@@ -16,6 +16,7 @@ library(tidyverse)
 library(here)
 library(broom)
 library(janitor)
+library(kableExtra)
 ```
 
 ```{r, include = FALSE}
@@ -61,20 +62,23 @@ environmental_proportions <- environmental_counts %>%
  adorn_pct_formatting((digits = 2)) %>%
  adorn_ns()
 
+env_table <- environmental_counts %>%
+  column_to_rownames("POL_PARTY")
+
 # Convert to contingency table 
 
-environmental_table <- environmental_counts %>%
- column_to_rownames(var = "POL_PARTY")
- # adorn_percentages() %>%
-  #adorn_pct_formatting((digits = 2)) %>%
-  #adorn_ns()
+environmental_table <- environmental_proportions %>%
+  remove_rownames() %>%
+ column_to_rownames(var = "POL_PARTY") %>%
+  kbl(caption = "Table 1: The majority of conservative identifying participants responded 'No' they do not consider themselves environmentalists (50.24%). Conversely, the majority of liberal identifying participants responded 'Yes' they do consider themselves environmentalists (53.73%)") %>%
+  kable_classic()
 
 
 #prop_table <- environmental_proportions %>%
  # column_to_rownames(var = "POL_PARTY")
 
 # Chi-squared - asking: is identifying as an environmentalist truly independent of the political party one identifies with 
-environ_x2 <- chisq.test(environmental_table)
+environ_x2 <- chisq.test(env_table)
 environ_x2
 
 # Write out chi-sq info in tidy format (in order to refer to the values in-line)
@@ -98,9 +102,9 @@ To explore this relationship, a contingency table was created with the counts an
 ```{r}
 # Print out a finalized version of this contingency table 
 
-environmental_proportions
+environmental_table
 ```
-**Table 1**: The majority of conservative identifying participants responded "No" they do not consider themselves environmentalists (50.24%). Conversely, the majority of liberal identifying participants responded "Yes" they do consider themselves environmentalists (53.73%). 
+
 
 
 ---
