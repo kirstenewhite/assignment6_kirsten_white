@@ -3,8 +3,8 @@ title: "Political Party Identification & Environmentalism"
 author: "Kirsten White"
 output: 
   html_document: 
+    theme: spacelab
     df_print: kable
-    theme: yeti
 ---
 
 ```{r setup, message = FALSE, echo = FALSE}
@@ -57,14 +57,18 @@ environmental_counts <- conservation_subset %>%
 
 # Show percentages 
 environmental_proportions <- environmental_counts %>%
-  adorn_percentages() %>%
-  adorn_pct_formatting((digits = 2)) %>%
-  adorn_ns()
+ adorn_percentages() %>%
+ adorn_pct_formatting((digits = 2)) %>%
+ adorn_ns()
 
 # Convert to contingency table 
 
 environmental_table <- environmental_counts %>%
-  column_to_rownames(var = "POL_PARTY")
+ column_to_rownames(var = "POL_PARTY")
+ # adorn_percentages() %>%
+  #adorn_pct_formatting((digits = 2)) %>%
+  #adorn_ns()
+
 
 #prop_table <- environmental_proportions %>%
  # column_to_rownames(var = "POL_PARTY")

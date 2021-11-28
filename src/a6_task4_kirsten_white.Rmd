@@ -1,23 +1,28 @@
 ---
-title: "Untitleda6_task4_kirsten_white"
+title: "Mono Lake Water Level Fluctuations - Lee Vining, CA (1851 - 2017)"
 author: "Kirsten White"
-date: "11/23/2021"
-output: html_document
+output: 
+  html_document: 
+    theme: flatly
 ---
 
+---
 ```{r setup, message = FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
 library(tidyverse)
 library(ggplot2)
 library(plotly)
+library(janitor)
+library(here)
 
 ```
 
 ```{r}
 # Read in the data & clean it up 
 
-mono_lake_data <- read_csv(here("data", "mono_lake_annual_levels.csv"), skip = 5) %>% # skips the first 5 rows (unnecessary)
+mono_lake_data <- read_csv(here("data", "mono_lake_annual_levels.csv"), skip = 5) %>%
+  # skips the first 5 rows (unnecessary)
   clean_names() %>%
   drop_na(vertical_change)
 ```
@@ -31,15 +36,28 @@ ggplot(data = level_change, aes(x = year)) +
   #geom_line() +
   geom_line(aes(y = lake_level_feet_above_sea_level), color = "navyblue")+
   #geom_line(aes(y = vertical_change), color = "red3")+
-  scale_y_continuous(breaks = c(6375, 6385, 6395, 6405, 6415, 6425))+
+  scale_y_continuous(breaks = c(6360, 6370, 6380, 6390, 6400, 6410, 6420, 6430))+
   scale_x_continuous(breaks = c(1850, 1875, 1900, 1925, 1950, 1975, 2000, 2017)) + 
   geom_hline(yintercept = 6392, color = "skyblue2", size = 0.9)+
+  geom_hline(yintercept = 6360, color = "tomato2", linetype = "dashed", size = 0.7)+
   labs(x = "Year", 
        y = "Water Level (ft above sea level)", 
-       title = "Mono Lake Level Change (1851 - 2017)") +
+       title = "Mono Lake Level Change - Lee Vining, CA (1851 - 2017)") +
   theme(plot.title = element_text(hjust = 0.5, face = "bold"))+
-  theme(axis.title = element_text(size = 10, face = "bold"))
- # annotate(geom = "text", x = "1987", label = "x")
-       
+  theme(axis.title = element_text(size = 10, face = "bold")) +
+  annotate(geom = "point", x = 1977, y =  6377, color = "seagreen4", size = 3) +
+  annotate(geom = "text", x = 1955, y = 6377, color = "seagreen4", label = "Land Bridges Emerge", size = 3.5) +
+  annotate(geom = "text", x = 1856, y = 6394, color = "skyblue3", label = "Stable Level", size = 3.5) +
+  annotate(geom = "point", x = 1941, y = 6417 , color = "red3", size = 3) +
+  annotate(geom = "text", x = 1952, y = 6420, color = "red3", label = "DWP Diversion Began", size = 3.5)+
+  annotate(geom = "text", x = 1960, y = 6381, color = "khaki4", label = "Supreme Court Ruling", size = 3.5) +
+  annotate(geom = "point", x = 1983, y = 6378, color = "khaki4", size = 3) +
+  annotate(geom = "point", x = 1994, y = 6374, color = "orange3", size = 3) +
+  annotate(geom = "text", x = 1994, y = 6371, color = "orange3", size = 3.5, label = "Decision 1631 Issued")+
+  annotate(geom = "text", x = 1873, y = 6362, color = "tomato2", size = 3.5, label = "Critical Salinity Level (120 g/L)")+ 
+  theme_grey() 
+
 ```
 
+
+**Figure 1**:  Following years of steady incline, lake levels sharply declined starting in 1941 as the LA Department of Water & Power began diverting water from Mono Lake's tributary streams to supply Los Angeles. Formed in 1978, the Mono Lake Committee spearheaded legal, legislative, and public outreach efforts to save the lake. As a result, lake levels increased over the following years as lawsuits passed, special designations were achieved, and restoration efforts unfolded. 

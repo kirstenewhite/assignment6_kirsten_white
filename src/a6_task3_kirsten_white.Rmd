@@ -1,16 +1,17 @@
 ---
-title: "Female Desert Grassland and Colorado Checkered Lizards Length Exploration "
+title: "Female Lizards Length Exploration: Desert Grassland & Colorado Checkered  "
 author: "Kirsten White"
 output: 
   html_document: 
-    theme: yeti
+    theme: flatly
 ---
 
-## **Introduction**
-This report explores lengths in female lizards of two species: Desert Grassland (Cnemidophorus uniparens) and Colorado Checkered (Cnemidophorus tessalatus) lizards. David Lightfoot's Lizard Pitfall Trap Data (LTER) from 1991 is utilized in this report in which the data was collected using live traps and the following variables were measured: species, sex, recapture status, snout-vent length, total length, weight, and whether tail is broken or whole. In this report, we will focus on the relationship between tail lengths among females of the Desert Grassland and Colorado Checkered species. 
+---
 
-**Data Citation**: Data source: Lightfoot, D. 2017. Lizard pitfall trap data (LTER-II, LTER-III) ver 36. Environmental Data Initiative.
-https://doi.org/10.6073/pasta/ff37b4cace16a9943575f3fd7067064e
+## Introduction
+This report explores lengths in female lizards of two species: Desert Grassland (Cnemidophorus uniparens) and Colorado Checkered (Cnemidophorus tessalatus). David Lightfoot's Lizard Pitfall Trap Data (LTER) from 1991 is utilized in which the data was collected using live traps and multiple variables were measured. In this report, we will focus on the relationship between tail lengths among females of the Desert Grassland and Colorado Checkered species. 
+
+---
 
 
 ```{r setup, message = FALSE, echo = FALSE}
@@ -28,10 +29,9 @@ library(effsize)
 # Read in the Data
 lizards <- read_csv(here("data", "lizards.csv"))
 ```
----
 
 
-## **Results**
+## Results
 
 ```{r}
 # Create a subset of data containing only variables spp, sex, and total_length
@@ -48,7 +48,7 @@ lizard_subset <- lizards %>%
 # Visualize female lizard lengths for the 2 species
 
 ggplot(data = lizard_subset, aes(x = spp_full, y = total_length, color = spp)) +
-  geom_jitter(width = 0.1, size = 1.25) +
+  geom_jitter(width = 0.1, size = 1.4) +
   scale_color_manual(values = c("aquamarine4", "goldenrod2"))+
   labs(x = "Species", 
        y = "Total Length (mm)", 
@@ -78,9 +78,11 @@ kbl(col.names = c("Species", "Sample Size", "Mean Length", "Standard Deviation")
 
   female_summary
 ```
+
 ---
 
-## **Summary**
+
+## Summary
 
 Exploratory data analysis reveals the following: 
 ```{r, include = FALSE}
@@ -114,3 +116,6 @@ length_cohen # indicates a large effect size
 - Female Colorado Checkered lizards are longer in length than female Desert Grassland lizards. 
 - The actual difference in mean length is `r round(CNTE_mean_length - CNUN_mean_length, 1)` mm and the percent difference is `r round((CNTE_mean_length - CNUN_mean_length)/(CNTE_mean_length + CNUN_mean_length)/2*100, 1)`%. 
 - In addition, a large effect size was found, Cohen's d = `r round(length_cohen$estimate, 1)`. 
+
+**Data Citation**: Data source: Lightfoot, D. 2017. Lizard pitfall trap data (LTER-II, LTER-III) ver 36. Environmental Data Initiative.
+https://doi.org/10.6073/pasta/ff37b4cace16a9943575f3fd7067064e
